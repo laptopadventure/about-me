@@ -1,18 +1,23 @@
 body {
-  background-color: lightcyan;
+  line-height: 1.6rem;
+  background-color: rgb(179, 247, 179);
 }
 
-blockquote {
-  margin-left: 2rem;
+section {
+  margin: 0.6rem 1rem;
   padding: 1rem;
-  border-left: black 5px solid;
-  background-color: rgba(128, 128, 128, 0.15);
-  width: 63.5%;
+  background-color: rgba(0, 0, 0, 0.15);
+  width: 65.5rem;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.35);
+}
+
+p {
+  margin: 0.5rem 1rem;
 }
 
 h1 {
   font-size: xx-large;
-  padding: 1rem;
+  padding: 0.5rem;
 }
 
 h2 {
@@ -22,67 +27,72 @@ h2 {
 }
 
 footer {
-  
   margin-top: 1rem;
   border-top: black 3px dotted;
   padding: 1rem;
   text-align: center;
 }
 
-ol {
+li {
+  margin-left: 1rem;
+}
+
+ul {
   margin-left: 2rem;
   list-style: disc;
 }
 
+ol {
+  margin-left: 2rem;
+  list-style:decimal;
+}
+
 .rightside {
+  margin-top: -1rem;
   float: right;
-  text-align: right;
-  width: 25%;
-  margin-top: 1rem;
-  margin-right: 3rem;
 }
 
 .borderedimage {
+  margin: 1rem 1rem 0 1rem;
   border: black 3px solid;
+  width: 600px;
   border-style: solid solid none solid;
   outline-offset: -3px;
 }
 
 .imagecaption {
+  text-align: center;
+  margin-top: -0.5rem;
+  width: 600px;
   border: black 3px solid;
   border-style: none solid solid solid;
   outline-offset: -3px;
-  margin-top: -0.2rem;
-  margin-right: -25px;
-  text-align: left;
-  padding: 5px;
   background-color: rgba(128, 128, 128, 0.15);
 }
 
 .mygoals {
-  padding: 1rem;
+  font-size: 18px;
 }
 
 .quiz {
   padding: 1rem;
-  width: 63.5%;
+  width: 65rem;
   margin-left: 1rem;
 }
 
-.i_asked {
-  padding-top : 0.1rem;
-  padding-bottom: 0.1rem;
-  font-weight: bold;
-}
-
 .you_said {
-  padding-top : 0.1rem;
-  padding-bottom: 0.1rem;
-  color: darkslateblue
+  color: darkslateblue;
 }
 
 .i_responded {
-  padding-top : 0.1rem;
-  padding-bottom: 0.1rem;
-  color: darkred
+  color: darkred;
+}
+
+.finalscore {
+  color: darkgreen;
+  font-weight: bold;
+}
+
+.titlesection {
+  width: 104rem;
 }
