@@ -142,7 +142,7 @@ for(let answerIndex = 0; answerIndex < questionArray.length; answerIndex++) {
         if(!tries){
           response += ', and you\'re outta guesses. I like rock, jazz, orchestra, r&b and pop.';
         } else {
-          response += '. Try again!'
+          response += '. Try again!';
         }
       }
       alert(response);
