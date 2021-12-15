@@ -79,6 +79,30 @@ function booleanQuestion(answerIndex,userResponse,expectedAnswer) {
   return breakAfterLogging;
 }
 
+function numberQuestion(answerIndex,userResponse,expectedAnswer){
+  recordedConversation.push('You guessed ' + userResponse + '.');
+  userResponse = parseInt(userResponse);
+  if(userResponse === expectedAnswer) {
+    response = answerBlurbs[answerIndex];
+    alert(response);
+    recordedConversation.push('I responded, "' + response +'"');
+    score++;
+    return true;
+  } else {
+    if(isNaN(userResponse)){
+      response = 'That\'s not a number!';
+    } else if(userResponse < expectedAnswer) {
+      response = 'That\'s too low, sorry.';
+    } else {
+      response = 'That\'s too high, sorry.';
+    }
+    alert(response);
+    recordedConversation.push('I responded, "' + response +'"');
+    if(!tries){
+      alert('The correct answer was 2019.');
+    }
+  }
+}
 
 
 ///responses - The if statement will always check if the correct answer was input, with the second being the incorrect message and the last message being the neither yes or no response
@@ -98,38 +122,21 @@ for(let answerIndex = 0; answerIndex < questionArray.length; answerIndex++) {
     }
     let userResponse = prompt(question);
     tries--;
-    let sanitizedResponse;
+
 
     //handle questions that are booleans
     if(typeof correctAnswer === 'boolean') {
-      let shouldBreak = booleanQuestion(correctAnswers[answerIndex]);
+      let shouldBreak = booleanQuestion(answerIndex,userResponse,correctAnswers[answerIndex]);
       if (shouldBreak){
         break;
       }
     }
+
     //handle questions that are numerical
     if(typeof correctAnswer === 'number') {
-      recordedConversation.push('You guessed ' + userResponse + '.');
-      sanitizedResponse = parseInt(userResponse);
-      if(sanitizedResponse === 2019) {
-        response = 'That\'s right! I really enjoyed my senior year of HS.';
-        alert(response);
-        recordedConversation.push('I responded, "' + response +'"');
-        score++;
+      let shouldBreak = numberQuestion(answerIndex,userResponse,correctAnswers[answerIndex]);
+      if (shouldBreak){
         break;
-      } else {
-        if(isNaN(sanitizedResponse)){
-          response = 'That\'s not a number!';
-        } else if(sanitizedResponse < 2019) {
-          response = 'That\'s too low, sorry.';
-        } else {
-          response = 'That\'s too high, sorry.';
-        }
-        alert(response);
-        recordedConversation.push('I responded, "' + response +'"');
-        if(!tries){
-          alert('The correct answer was 2019.');
-        }
       }
     }
     //handle questions that can be any string in a list
