@@ -44,11 +44,50 @@ let recordedConversation = [];
 //how i respond to each question, kinda. became more of a general use var sorry
 let response = '';
 
+function booleanQuestion(answerIndex,userResponse,expectedAnswer) {
+  //set by the question type if needed
+  let sanitizedResponse;
+  //can't turn into a bool
+  let nonsense = false;
+  sanitizedResponse = userResponse.toLowerCase().slice(0, 1);
+  //response
+  if(sanitizedResponse === 'y'){
+    sanitizedResponse = true;
+    userResponse = 'said yes';
+  } else if (sanitizedResponse === 'n') {
+    sanitizedResponse = false;
+    userResponse = 'said no';
+  } else {
+    userResponse = 'said "' + userResponse + '"';
+    nonsense = true;
+  }
+  //was it correct
+  let breakAfterLogging = false;
+  if(nonsense){
+    response = 'Yes or no, please!';
+  } else if(sanitizedResponse === expectedAnswer) {
+    response = answerBlurbs[answerIndex][0];
+    score++;
+    breakAfterLogging = true;
+  } else {
+    response = answerBlurbs[answerIndex][1];
+  }
+  alert(response);
+  //record for "chat log"
+  recordedConversation.push('You ' + userResponse + '.');
+  recordedConversation.push('I responded, "' + response +'"');
+  return breakAfterLogging;
+}
+
+
+
 ///responses - The if statement will always check if the correct answer was input, with the second being the incorrect message and the last message being the neither yes or no response
 
 for(let answerIndex = 0; answerIndex < questionArray.length; answerIndex++) {
   tries = questionArray[answerIndex][1];
   let prefixQuestion = false;
+  let correctAnswer = correctAnswers[answerIndex];
+
   if (tries > 1) {
     prefixQuestion = true;
   }
@@ -59,42 +98,12 @@ for(let answerIndex = 0; answerIndex < questionArray.length; answerIndex++) {
     }
     let userResponse = prompt(question);
     tries--;
-    //set by the question type if needed
     let sanitizedResponse;
-    let correctAnswer = correctAnswers[answerIndex];
 
     //handle questions that are booleans
     if(typeof correctAnswer === 'boolean') {
-      //can't turn into a bool
-      let nonsense = false;
-      sanitizedResponse = userResponse.toLowerCase().slice(0, 1);
-      //response
-      if(sanitizedResponse === 'y'){
-        sanitizedResponse = true;
-        userResponse = 'said yes';
-      } else if (sanitizedResponse === 'n') {
-        sanitizedResponse = false;
-        userResponse = 'said no';
-      } else {
-        userResponse = 'said "' + userResponse + '"';
-        nonsense = true;
-      }
-      //was it correct
-      let breakAfterLogging = false;
-      if(nonsense){
-        response = 'Yes or no, please!';
-      } else if(sanitizedResponse === correctAnswer) {
-        response = answerBlurbs[answerIndex][0];
-        score++;
-        breakAfterLogging = true;
-      } else {
-        response = answerBlurbs[answerIndex][1];
-      }
-      alert(response);
-      //record for "chat log"
-      recordedConversation.push('You ' + userResponse + '.');
-      recordedConversation.push('I responded, "' + response +'"');
-      if(breakAfterLogging){
+      let shouldBreak = booleanQuestion(correctAnswers[answerIndex]);
+      if (shouldBreak){
         break;
       }
     }
