@@ -44,7 +44,7 @@ let recordedConversation = [];
 //how i respond to each question, kinda. became more of a general use var sorry
 let response = '';
 
-function booleanQuestion(answerIndex,userResponse,expectedAnswer) {
+function booleanQuestion(answerIndex,expectedAnswer) {
   //set by the question type if needed
   let sanitizedResponse;
   //can't turn into a bool
@@ -79,7 +79,7 @@ function booleanQuestion(answerIndex,userResponse,expectedAnswer) {
   return breakAfterLogging;
 }
 
-function numberQuestion(answerIndex,userResponse,expectedAnswer){
+function numberQuestion(answerIndex,expectedAnswer){
   recordedConversation.push('You guessed ' + userResponse + '.');
   userResponse = parseInt(userResponse);
   if(userResponse === expectedAnswer) {
@@ -104,9 +104,35 @@ function numberQuestion(answerIndex,userResponse,expectedAnswer){
   }
 }
 
+function arrayQuestion(answerIndex,expectedAnswers){
+  let found = false;
+  for(let oneAnswer = 0; oneAnswer < expectedAnswers.length; oneAnswer++){
+    if(userResponse === expectedAnswers[oneAnswer]){
+      found = true;
+      break;
+    }
+  }
+  let breakAfterLogging = false;
+  if(found){
+    response = answerBlurbs[answerIndex][0];
+    score++;
+    breakAfterLogging = true;
+  } else {
+    response = 'That\'s not it';
+    if(!tries){
+      response += ', and you\'re outta guesses. I like rock, jazz, orchestra, r&b and pop.';
+    } else {
+      response += '. Try again!';
+    }
+  }
+  alert(response);
+  recordedConversation.push('Your guess was "' + userResponse + '"');
+  recordedConversation.push('I responded, "' + response +'"');
+  return breakAfterLogging;
+}
 
 ///responses - The if statement will always check if the correct answer was input, with the second being the incorrect message and the last message being the neither yes or no response
-
+let userResponse;
 for(let answerIndex = 0; answerIndex < questionArray.length; answerIndex++) {
   tries = questionArray[answerIndex][1];
   let prefixQuestion = false;
@@ -120,51 +146,28 @@ for(let answerIndex = 0; answerIndex < questionArray.length; answerIndex++) {
     if(prefixQuestion) {
       question = 'You have ' + tries + ' tries to guess this. ' + question;
     }
-    let userResponse = prompt(question);
+    userResponse = prompt(question);
     tries--;
 
 
     //handle questions that are booleans
     if(typeof correctAnswer === 'boolean') {
-      let shouldBreak = booleanQuestion(answerIndex,userResponse,correctAnswers[answerIndex]);
+      let shouldBreak = booleanQuestion(answerIndex,correctAnswers[answerIndex]);
       if (shouldBreak){
         break;
       }
     }
-
     //handle questions that are numerical
     if(typeof correctAnswer === 'number') {
-      let shouldBreak = numberQuestion(answerIndex,userResponse,correctAnswers[answerIndex]);
+      let shouldBreak = numberQuestion(answerIndex,correctAnswers[answerIndex]);
       if (shouldBreak){
         break;
       }
     }
     //handle questions that can be any string in a list
     if(typeof correctAnswer === 'object'){
-      let found = false;
-      for(let oneAnswer = 0; oneAnswer < correctAnswer.length; oneAnswer++){
-        if(userResponse === correctAnswer[oneAnswer]){
-          found = true;
-          break;
-        }
-      }
-      let breakAfterLogging = false;
-      if(found){
-        response = answerBlurbs[answerIndex][0];
-        score++;
-        breakAfterLogging = true;
-      } else {
-        response = 'That\'s not it';
-        if(!tries){
-          response += ', and you\'re outta guesses. I like rock, jazz, orchestra, r&b and pop.';
-        } else {
-          response += '. Try again!';
-        }
-      }
-      alert(response);
-      recordedConversation.push('Your guess was "' + userResponse + '"');
-      recordedConversation.push('I responded, "' + response +'"');
-      if(breakAfterLogging){
+      let shouldBreak = arrayQuestion(answerIndex,correctAnswers[answerIndex]);
+      if (shouldBreak){
         break;
       }
     }
