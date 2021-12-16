@@ -44,11 +44,100 @@ let recordedConversation = [];
 //how i respond to each question, kinda. became more of a general use var sorry
 let response = '';
 
-///responses - The if statement will always check if the correct answer was input, with the second being the incorrect message and the last message being the neither yes or no response
+function booleanQuestion(answerIndex,expectedAnswer) {
+  //set by the question type if needed
+  let sanitizedResponse;
+  //can't turn into a bool
+  let nonsense = false;
+  sanitizedResponse = userResponse.toLowerCase().slice(0, 1);
+  //response
+  if(sanitizedResponse === 'y'){
+    sanitizedResponse = true;
+    userResponse = 'said yes';
+  } else if (sanitizedResponse === 'n') {
+    sanitizedResponse = false;
+    userResponse = 'said no';
+  } else {
+    userResponse = 'said "' + userResponse + '"';
+    nonsense = true;
+  }
+  //was it correct
+  let breakAfterLogging = false;
+  if(nonsense){
+    response = 'Yes or no, please!';
+  } else if(sanitizedResponse === expectedAnswer) {
+    response = answerBlurbs[answerIndex][0];
+    score++;
+    breakAfterLogging = true;
+  } else {
+    response = answerBlurbs[answerIndex][1];
+  }
+  alert(response);
+  //record for "chat log"
+  recordedConversation.push('You ' + userResponse + '.');
+  recordedConversation.push('I responded, "' + response +'"');
+  return breakAfterLogging;
+}
 
+function numberQuestion(answerIndex,expectedAnswer){
+  recordedConversation.push('You guessed ' + userResponse + '.');
+  userResponse = parseInt(userResponse);
+  if(userResponse === expectedAnswer) {
+    response = answerBlurbs[answerIndex];
+    alert(response);
+    recordedConversation.push('I responded, "' + response +'"');
+    score++;
+    return true;
+  } else {
+    if(isNaN(userResponse)){
+      response = 'That\'s not a number!';
+    } else if(userResponse < expectedAnswer) {
+      response = 'That\'s too low, sorry.';
+    } else {
+      response = 'That\'s too high, sorry.';
+    }
+    alert(response);
+    recordedConversation.push('I responded, "' + response +'"');
+    if(!tries){
+      alert('The correct answer was 2019.');
+    }
+  }
+}
+
+function arrayQuestion(answerIndex,expectedAnswers){
+  let found = false;
+  for(let oneAnswer = 0; oneAnswer < expectedAnswers.length; oneAnswer++){
+    if(userResponse === expectedAnswers[oneAnswer]){
+      found = true;
+      break;
+    }
+  }
+  let breakAfterLogging = false;
+  if(found){
+    response = answerBlurbs[answerIndex][0];
+    score++;
+    breakAfterLogging = true;
+  } else {
+    response = 'That\'s not it';
+    if(!tries){
+      response += ', and you\'re outta guesses. I like rock, jazz, orchestra, r&b and pop.';
+    } else {
+      response += '. Try again!';
+    }
+  }
+  alert(response);
+  recordedConversation.push('Your guess was "' + userResponse + '"');
+  recordedConversation.push('I responded, "' + response +'"');
+  return breakAfterLogging;
+}
+
+///responses - The if statement will always check if the correct answer was input, with the second being the incorrect message and the last message being the neither yes or no response
+let userResponse;
 for(let answerIndex = 0; answerIndex < questionArray.length; answerIndex++) {
   tries = questionArray[answerIndex][1];
   let prefixQuestion = false;
+  let correctAnswer = correctAnswers[answerIndex];
+
   if (tries > 1) {
     prefixQuestion = true;
   }
@@ -57,98 +146,28 @@ for(let answerIndex = 0; answerIndex < questionArray.length; answerIndex++) {
     if(prefixQuestion) {
       question = 'You have ' + tries + ' tries to guess this. ' + question;
     }
-    let userResponse = prompt(question);
+    userResponse = prompt(question);
     tries--;
-    //set by the question type if needed
-    let sanitizedResponse;
-    let correctAnswer = correctAnswers[answerIndex];
+
 
     //handle questions that are booleans
     if(typeof correctAnswer === 'boolean') {
-      //can't turn into a bool
-      let nonsense = false;
-      sanitizedResponse = userResponse.toLowerCase().slice(0, 1);
-      //response
-      if(sanitizedResponse === 'y'){
-        sanitizedResponse = true;
-        userResponse = 'said yes';
-      } else if (sanitizedResponse === 'n') {
-        sanitizedResponse = false;
-        userResponse = 'said no';
-      } else {
-        userResponse = 'said "' + userResponse + '"';
-        nonsense = true;
-      }
-      //was it correct
-      let breakAfterLogging = false;
-      if(nonsense){
-        response = 'Yes or no, please!';
-      } else if(sanitizedResponse === correctAnswer) {
-        response = answerBlurbs[answerIndex][0];
-        score++;
-        breakAfterLogging = true;
-      } else {
-        response = answerBlurbs[answerIndex][1];
-      }
-      alert(response);
-      //record for "chat log"
-      recordedConversation.push('You ' + userResponse + '.');
-      recordedConversation.push('I responded, "' + response +'"');
-      if(breakAfterLogging){
+      let shouldBreak = booleanQuestion(answerIndex,correctAnswers[answerIndex]);
+      if (shouldBreak){
         break;
       }
     }
     //handle questions that are numerical
     if(typeof correctAnswer === 'number') {
-      recordedConversation.push('You guessed ' + userResponse + '.');
-      sanitizedResponse = parseInt(userResponse);
-      if(sanitizedResponse === 2019) {
-        response = 'That\'s right! I really enjoyed my senior year of HS.';
-        alert(response);
-        recordedConversation.push('I responded, "' + response +'"');
-        score++;
+      let shouldBreak = numberQuestion(answerIndex,correctAnswers[answerIndex]);
+      if (shouldBreak){
         break;
-      } else {
-        if(isNaN(sanitizedResponse)){
-          response = 'That\'s not a number!';
-        } else if(sanitizedResponse < 2019) {
-          response = 'That\'s too low, sorry.';
-        } else {
-          response = 'That\'s too high, sorry.';
-        }
-        alert(response);
-        recordedConversation.push('I responded, "' + response +'"');
-        if(!tries){
-          alert('The correct answer was 2019.');
-        }
       }
     }
     //handle questions that can be any string in a list
     if(typeof correctAnswer === 'object'){
-      let found = false;
-      for(let oneAnswer = 0; oneAnswer < correctAnswer.length; oneAnswer++){
-        if(userResponse === correctAnswer[oneAnswer]){
-          found = true;
-          break;
-        }
-      }
-      let breakAfterLogging = false;
-      if(found){
-        response = answerBlurbs[answerIndex][0];
-        score++;
-        breakAfterLogging = true;
-      } else {
-        response = 'That\'s not it';
-        if(!tries){
-          response += ', and you\'re outta guesses. I like rock, jazz, orchestra, r&b and pop.';
-        } else {
-          response += '. Try again!';
-        }
-      }
-      alert(response);
-      recordedConversation.push('Your guess was "' + userResponse + '"');
-      recordedConversation.push('I responded, "' + response +'"');
-      if(breakAfterLogging){
+      let shouldBreak = arrayQuestion(answerIndex,correctAnswers[answerIndex]);
+      if (shouldBreak){
         break;
       }
     }
