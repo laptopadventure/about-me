@@ -29,7 +29,8 @@ h2 {
 footer {
   margin-top: 1rem;
   border-top: black 3px dotted;
-  padding: 1rem;
+  width: 67.5rem;
+  margin: 1rem;
   text-align: center;
 }
 
@@ -49,13 +50,14 @@ ol {
 
 .rightside {
   margin-top: -1rem;
-  float: right;
+  position:fixed;
+  margin-left: 63%;
 }
 
 .borderedimage {
   margin: 1rem 1rem 0 1rem;
   border: black 3px solid;
-  width: 600px;
+  width: 94%;
   border-style: solid solid none solid;
   outline-offset: -3px;
 }
