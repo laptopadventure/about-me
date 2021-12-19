@@ -7,7 +7,7 @@ section {
   margin: 0.6rem 1rem;
   padding: 1rem;
   background-color: rgba(0, 0, 0, 0.15);
-  width: 65.5rem;
+  width: 60.6%;
   box-shadow: 0 2px 3px rgba(0, 0, 0, 0.35);
 }
 
@@ -29,7 +29,7 @@ h2 {
 footer {
   margin-top: 1rem;
   border-top: black 3px dotted;
-  width: 67.5rem;
+  width: 62%;
   margin: 1rem;
   text-align: center;
 }
@@ -57,7 +57,8 @@ ol {
 .borderedimage {
   margin: 1rem 1rem 0 1rem;
   border: black 3px solid;
-  width: 94%;
+  max-width: 94.2%;
+  height: auto;
   border-style: solid solid none solid;
   outline-offset: -3px;
 }
@@ -65,7 +66,6 @@ ol {
 .imagecaption {
   text-align: center;
   margin-top: -0.5rem;
-  width: 600px;
   border: black 3px solid;
   border-style: none solid solid solid;
   outline-offset: -3px;
